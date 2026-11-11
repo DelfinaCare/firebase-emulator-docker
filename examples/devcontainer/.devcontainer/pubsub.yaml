@@ -1,0 +1,14 @@
+# Topics and subscriptions created in the Pub/Sub emulator at startup.
+# pushPath is joined to PUBSUB_PUSH_BASE_URL; pushEndpoint is used as is.
+# A subscription with neither is a pull subscription.
+topics:
+  - name: orders
+    subscriptions:
+      - name: orders-worker
+      - name: orders-push
+        pushPath: /pubsub/orders
+  - name: notifications
+    subscriptions:
+      - name: notifications-push
+        pushPath: /pubsub/notifications
+        ackDeadlineSeconds: 30

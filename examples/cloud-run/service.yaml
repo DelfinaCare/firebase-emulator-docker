@@ -1,0 +1,82 @@
+# Cloud Run service with the app as the ingress container and the Firebase
+# emulators as a sidecar. Replace the CAPITALISED placeholders, then:
+#   gcloud run services replace service.yaml --region REGION
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: SERVICE_NAME
+spec:
+  template:
+    metadata:
+      annotations:
+        # Emulator state lives in memory in one instance.
+        autoscaling.knative.dev/maxScale: "1"
+        # Required for Cloud Storage volume mounts.
+        run.googleapis.com/execution-environment: gen2
+        # Keep CPU allocated outside requests, so the emulators keep running
+        # and Pub/Sub push deliveries are made between requests.
+        run.googleapis.com/cpu-throttling: "false"
+        # Start the app only once the firebase startup probe has passed.
+        run.googleapis.com/container-dependencies: '{"app":["firebase"]}'
+    spec:
+      containers:
+        - name: app
+          image: REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/APP_IMAGE:TAG
+          ports:
+            - containerPort: 8080
+          env:
+            # Containers in an instance share localhost.
+            - name: FIREBASE_AUTH_EMULATOR_HOST
+              value: localhost:9099
+            - name: PUBSUB_EMULATOR_HOST
+              value: localhost:8085
+            - name: GOOGLE_CLOUD_PROJECT
+              value: demo-project
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+
+        - name: firebase
+          # Cloud Run cannot pull from ghcr.io; this is an Artifact Registry
+          # remote repository with ghcr.io as its upstream (see README.md).
+          image: REGION-docker.pkg.dev/PROJECT_ID/ghcr/OWNER/firebase-emulator-docker:latest
+          env:
+            - name: FIREBASE_PROJECT
+              value: demo-project
+            - name: FIREBASE_UI_ENABLED
+              value: "false"
+            - name: PUBSUB_PUSH_BASE_URL
+              value: http://localhost:8080
+          startupProbe:
+            httpGet:
+              path: /
+              port: 9099
+            periodSeconds: 2
+            timeoutSeconds: 1
+            failureThreshold: 60
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: firebase-data
+              mountPath: /data
+            - name: pubsub-config
+              mountPath: /etc/firebase
+
+      volumes:
+        - name: firebase-data
+          csi:
+            driver: gcsfuse.run.googleapis.com
+            volumeAttributes:
+              bucketName: BUCKET_NAME
+              # One directory per preview environment.
+              mountOptions: only-dir=SERVICE_NAME
+        - name: pubsub-config
+          secret:
+            # A Secret Manager secret holding your pubsub.yaml.
+            secretName: firebase-pubsub-config
+            items:
+              - key: latest
+                path: pubsub.yaml

@@ -1,0 +1,10 @@
+{
+  "name": "firebase-emulator-docker",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned firebase-tools version for the Docker image. Kept up to date by dependabot.",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-tools": "15.35.0"
+  }
+}

@@ -1,0 +1,8 @@
+topics:
+  - name: smoke-topic
+    subscriptions:
+      - name: smoke-pull
+      - name: smoke-push
+        pushPath: /pubsub/smoke
+      - name: smoke-absolute
+        pushEndpoint: http://other:9000/hook

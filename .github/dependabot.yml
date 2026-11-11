@@ -1,0 +1,19 @@
+version: 2
+updates:
+  # Bumps the tag and digest of each FROM line in the Dockerfile.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      # A new Node major is a manual change: firebase-tools has to support it.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

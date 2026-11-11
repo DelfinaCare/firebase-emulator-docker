@@ -1,0 +1,28 @@
+services:
+  app:
+    # Replace with your own development image or build.
+    image: mcr.microsoft.com/devcontainers/base:trixie
+    command: sleep infinity
+    volumes:
+      - ../..:/workspaces:cached
+    environment:
+      GOOGLE_CLOUD_PROJECT: demo-project
+      FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
+      PUBSUB_EMULATOR_HOST: firebase:8085
+      PUBSUB_PROJECT_ID: demo-project
+    depends_on:
+      firebase:
+        condition: service_healthy
+
+  firebase:
+    image: ghcr.io/OWNER/firebase-emulator-docker:latest
+    environment:
+      FIREBASE_PROJECT: demo-project
+      # Push subscriptions deliver to the app service on port 8080.
+      PUBSUB_PUSH_BASE_URL: http://app:8080
+    volumes:
+      - firebase-data:/data
+      - ./pubsub.yaml:/etc/firebase/pubsub.yaml:ro
+
+volumes:
+  firebase-data:

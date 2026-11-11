@@ -1,0 +1,12 @@
+{
+  "name": "app with Firebase emulators",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": ["firebase:4000", "firebase:9099"],
+  "portsAttributes": {
+    "firebase:4000": { "label": "Emulator UI" },
+    "firebase:9099": { "label": "Auth emulator" }
+  }
+}
