@@ -8,8 +8,7 @@ environment variables and mounted files. It is meant for:
 - preview environments on Cloud Run, as a sidecar container, so a service under test talks to the
   auth emulator instead of real Firebase Auth.
 
-Image: `ghcr.io/OWNER/firebase-emulator-docker` (replace `OWNER` with the GitHub owner of the
-repository the image is published from).
+Image: `ghcr.io/DelfinaCare/firebase-emulator-docker`.
 
 > The emulators are insecure by design: no real authentication, no access control on the admin
 > APIs, all data readable and writable by anyone who can reach the ports. Never put production data
@@ -19,7 +18,7 @@ repository the image is published from).
 
 ```sh
 docker run --rm -p 4000:4000 -p 4500:4500 -p 9099:9099 -p 8085:8085 \
-  ghcr.io/OWNER/firebase-emulator-docker
+  ghcr.io/DelfinaCare/firebase-emulator-docker
 ```
 
 Then open the Emulator UI at http://localhost:4000. Publish the emulator ports on the same port

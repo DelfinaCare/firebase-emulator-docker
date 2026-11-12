@@ -15,7 +15,7 @@ services:
         condition: service_healthy
 
   firebase:
-    image: ghcr.io/OWNER/firebase-emulator-docker:latest
+    image: ghcr.io/DelfinaCare/firebase-emulator-docker:latest
     environment:
       FIREBASE_PROJECT: demo-project
       # Push subscriptions deliver to the app service on port 8080.
