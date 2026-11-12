@@ -40,7 +40,7 @@ spec:
         - name: firebase
           # Cloud Run cannot pull from ghcr.io; this is an Artifact Registry
           # remote repository with ghcr.io as its upstream (see README.md).
-          image: REGION-docker.pkg.dev/PROJECT_ID/ghcr/OWNER/firebase-emulator-docker:latest
+          image: REGION-docker.pkg.dev/PROJECT_ID/ghcr/DelfinaCare/firebase-emulator-docker:latest
           env:
             - name: FIREBASE_PROJECT
               value: demo-project
