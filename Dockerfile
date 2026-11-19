@@ -6,7 +6,7 @@ FROM mikefarah/yq:4.54.3@sha256:7834187596ad56fd5a81436114e0b0b9dd54c91bb43946d1
 # or newer, which is trixie's default JRE (bookworm's is 17).
 # Both base images are pinned by tag and digest; dependabot updates the two
 # together (.github/dependabot.yml holds node back from new major versions).
-FROM node:24.22.2-trixie-slim@sha256:0820eaa85e07d0490446dd01d14707e17e6108a36988cf374899cd057eb3812d
+FROM node:24.22.3-trixie-slim@sha256:af02d57b57719b9657a45199a79264a9437940cd55b3c7b3fc99615654f124a0
 
 # Emulator binaries to download at build time, so startup does not need
 # network access. Any of: pubsub ui firestore database storage. Emulators not
